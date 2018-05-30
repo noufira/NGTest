@@ -1,0 +1,22 @@
+.example-tree-invisible {
+    display: none;
+}
+.example-tree ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    /* background-color: rosybrown; */
+    padding-left: 10px;
+    /* line-height: 5%; */
+}
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+  background-color: azure;
+  /* height: 30px; */
+  /* padding-left: 2px; */
+  /* line-height: 1px; */
+  /* width: 100%; */
+    list-style-position:inside;
+    border: 1px solid black;
+}
