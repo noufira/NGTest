@@ -14,47 +14,97 @@ export class FileNode {
     filename: string;
     type: any;
     img: string;
+    level: number;
 }
   
 /**
  * The file structure tree data in string. The data could be parsed into a Json object
  */
+// const TREE_DATA = `
+// {
+//   "Documents": {
+//     "angular": {
+//       "src": {
+//         "core": "ts",
+//         "compiler": "ts"
+//       }
+//     },
+//     "material2": {
+//       "src": {
+//         "button": "ts",
+//         "checkbox": "ts",
+//         "input": "ts"
+//       }
+//     }
+//   },
+//   "Downloads": {
+//       "Tutorial": "html",
+//       "November": "pdf",
+//       "October": "pdf"
+//   },
+//   "Pictures": {
+//       "Sun": "png",
+//       "Woods": "jpg",
+//       "Photo Booth Library": {
+//         "Contents": "dir",
+//         "Pictures": "dir"
+//       }
+//   },
+//   "Applications": {
+//       "Chrome": "app",
+//       "Calendar": "app",
+//       "Webstorm": "app"
+//   }
+// }`;
+
 const TREE_DATA = `
-{
-  "Documents": {
-    "angular": {
-      "src": {
-        "core": "ts",
-        "compiler": "ts"
-      }
+[
+    {
+        "fileName":"Home", 
+        "img":"card_membership", 
+        "children":[
+            {
+                "fileName":"f1.1", 
+                "img":"fingerprint"
+            }, {
+                "fileName":"f1.2", 
+                "img":"donut_small" 
+            }
+        ]
+    }, 
+    {
+        "fileName":"Buttons", 
+        "img":"alarm_on", 
+        "children":[
+            {
+                "fileName":"f2.1", 
+                "img":"computer"
+            }, {
+                "fileName":"f2.2", 
+                "img":"feedback"
+            }
+        ]
     },
-    "material2": {
-      "src": {
-        "button": "ts",
-        "checkbox": "ts",
-        "input": "ts"
-      }
+    {
+        "fileName":"Table", 
+        "img":"format_list_bulleted", 
+        "children":[
+            {
+                "fileName":"f3.1", 
+                "img":"computer",
+                "children":[
+                    {
+                        "fileName":"f3", 
+                        "img":"attachment"
+                    }
+                ]
+            }, {
+                "fileName":"f2.2", 
+                "img":"feedback"
+            }
+        ]
     }
-  },
-  "Downloads": {
-      "Tutorial": "html",
-      "November": "pdf",
-      "October": "pdf"
-  },
-  "Pictures": {
-      "Sun": "png",
-      "Woods": "jpg",
-      "Photo Booth Library": {
-        "Contents": "dir",
-        "Pictures": "dir"
-      }
-  },
-  "Applications": {
-      "Chrome": "app",
-      "Calendar": "app",
-      "Webstorm": "app"
-  }
-}`;
+]`;
   
   /**
    * File database, it can build a tree structured Json object from string.
@@ -76,10 +126,12 @@ const TREE_DATA = `
     initialize() {
       // Parse the string to json object.
       const dataObject = JSON.parse(TREE_DATA);
+      //console.log(TREE_DATA);
   
       // Build the tree nodes from Json object. The result is a list of `FileNode` with nested
       //     file node as children.
       const data = this.buildFileTree(dataObject, 0);
+
   
       // Notify the change.
       this.dataChange.next(data);
@@ -89,23 +141,48 @@ const TREE_DATA = `
      * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
      * The return value is the list of `FileNode`.
      */
+    // buildFileTree(value: any, level: number): FileNode[] {
+    //     let data: any[] = [];
+    //     for (let k in value) {
+    //         let v = value[k];
+    //         let node = new FileNode();
+    //         node.filename = `${k}`;
+    //         node.level = level;
+    //       //node.img = 'home';
+    //         if (v === null || v === undefined) {
+    //             // no action
+    //         } else if (typeof v === 'object') {
+    //             node.children = this.buildFileTree(v, level + 1);
+    //         } else {
+    //             node.type = v;
+    //         }
+    //         data.push(node);
+    //     }
+    //     //console.log(data);
+    //     return data;
+    // }
+
     buildFileTree(value: any, level: number): FileNode[] {
         let data: any[] = [];
-        for (let k in value) {
-          let v = value[k];
-          let node = new FileNode();
-          node.filename = `${k}`;
-          node.img = 'home';
-          if (v === null || v === undefined) {
-            // no action
-          } else if (typeof v === 'object') {
-            node.children = this.buildFileTree(v, level + 1);
-          } else {
-            node.type = v;
-          }
-          data.push(node);
+        for (var i = 0; i < value.length; i++) {
+            let obj = value[i];
+            let node = new FileNode();
+            let child = obj['children'];
+            node.filename = obj['fileName'];
+            node.img = obj['img'];
+            node.level = level;
+
+            if (child === null || child === undefined) {
+                // no action
+                node.type = '0';
+            } else if (typeof child === 'object') {
+                node.children = this.buildFileTree(child, level + 1);
+            } else {
+                node.type = '0';
+            }
+            data.push(node);
+            //console.log(data);
         }
-        //console.log(data);
         return data;
     }
   }

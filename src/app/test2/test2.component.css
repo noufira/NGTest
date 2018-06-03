@@ -17,6 +17,7 @@
   /* padding-left: 2px; */
   /* line-height: 1px; */
   /* width: 100%; */
-    list-style-position:inside;
-    border: 1px solid black;
+    /* list-style-position:inside; */
+    /* border: 1px solid black; */
+    width: 100%;
 }
